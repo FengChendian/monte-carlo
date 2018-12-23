@@ -16,19 +16,22 @@ feet = 1000
 wide = 0.4
 # 箭头坐标调整
 ajust = 4.5 * wide + 4
+# 正方形点阵边长——每单位长度上存在一个自旋
+side_length = 10
+
+# 坐标轴最大值(不要更改)
+axis_len = side_length * 10
 
 # 初始化
-state = np.empty((5, 5))
-for i in range(5):
-    for j in range(5):
+state = np.empty((side_length, side_length))
+for i in range(side_length):
+    for j in range(side_length):
         state[i][j] = random.choice([4, -4])
 
 
 def judge(state):
-    # 随机选取一个自旋
-    i = random.randint(0, 4)
-    j = random.randint(0, 4)
-    # 计算能量H
+    i = random.randint(0, side_length - 1)
+    j = random.randint(0, side_length - 1)
     H_1 = calculate(state, i, j, 1)
     H_2 = calculate(state, i, j, -1)
     if H_2 - H_1 < 0:
@@ -42,8 +45,8 @@ def judge(state):
 
 
 def calculate(state, i, j, real):
-    horizon = -J * (state[(i - 1) % 5][j] + state[(i + 1) % 5][j])
-    vertical = -J * (state[i][(j - 1) % 5] + state[i][(j + 1) % 5])
+    horizon = -J * (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
+    vertical = -J * (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
     H = horizon + vertical
     return H
 
@@ -60,15 +63,15 @@ for index in range(feet):
     plt.cla()
 
     # 绘制恰当的坐标轴
-    plt.xlim(-10, 50)
-    plt.ylim(-5, 50)
+    plt.xlim(-10, axis_len)
+    plt.ylim(-5, axis_len)
 
     # 改变自旋
     judge(state)
 
     # 绘图
-    for i in range(5):
-        for j in range(5):
+    for i in range(side_length):
+        for j in range(side_length):
             if state[i][j] == -4:
                 plt.arrow(i * 10, j * 10 + ajust, 0, state[i][j], width=wide, color='black')
             else:
