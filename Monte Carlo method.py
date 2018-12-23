@@ -106,7 +106,7 @@ for times in range(45):
     E.append(0.5 * E_0 / side_length)
 
     # 曲线拟合
-    fp2 = np.polyfit(Tem, E, 2)
+    fp2 = np.polyfit(Tem, E, 3)
     f2 = np.poly1d(fp2)
     fx = np.linspace(0,Tem[-1],1000)
     plt.subplot(122)
