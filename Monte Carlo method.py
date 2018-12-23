@@ -25,8 +25,10 @@ for i in range(5):
 
 
 def judge(state):
+    # 随机选取一个自旋
     i = random.randint(0, 4)
     j = random.randint(0, 4)
+    # 计算能量H
     H_1 = calculate(state, i, j, 1)
     H_2 = calculate(state, i, j, -1)
     if H_2 - H_1 < 0:
