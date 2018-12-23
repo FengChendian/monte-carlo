@@ -6,21 +6,26 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # 必要物理参数定义
-T = 1.5
+T_0 = 0.5
+Delta_T = 0.1
 K = 1.0
 J = 1.0
-Beta = 1 / (T * K)
+
 # 步长
-feet = 1000
+feet = 100
 # 箭头宽度
 wide = 0.4
 # 箭头坐标调整
 ajust = 4.5 * wide + 4
-# 正方形点阵边长——每单位长度上存在一个自旋
-side_length = 10
+# 正方形点阵边长——单位长度表示一个自旋
+side_length = 4
 
 # 坐标轴最大值(不要更改)
 axis_len = side_length * 10
+
+# 能量坐标
+E = []
+Tem = []
 
 # 初始化
 state = np.empty((side_length, side_length))
@@ -29,7 +34,7 @@ for i in range(side_length):
         state[i][j] = random.choice([4, -4])
 
 
-def judge(state):
+def judge(state, Beta):
     i = random.randint(0, side_length - 1)
     j = random.randint(0, side_length - 1)
     H_1 = calculate(state, i, j, 1)
@@ -50,35 +55,66 @@ def calculate(state, i, j, real):
     H = horizon + vertical
     return H
 
-
-# 生成画布
-plt.figure(figsize=(15, 15), dpi=100)
-
-# 打开交互模式
-plt.ion()
-
-# 循环
-for index in range(feet):
-    # 清除原有图像
-    plt.cla()
-
-    # 绘制恰当的坐标轴
-    plt.xlim(-10, axis_len)
-    plt.ylim(-5, axis_len)
-
-    # 改变自旋
-    judge(state)
-
-    # 绘图
+def energy(state):
+    H_0 = 0
     for i in range(side_length):
         for j in range(side_length):
-            if state[i][j] == -4:
-                plt.arrow(i * 10, j * 10 + ajust, 0, state[i][j], width=wide, color='black')
-            else:
-                plt.arrow(i * 10, j * 10, 0, state[i][j], width=wide, color='black')
+            horizon = -J * (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
+            vertical = -J * (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
+            H_0 += (horizon + vertical)
+
+    return H_0            
+# 生成画布
+plt.figure(num=1, figsize=(20, 40), dpi=100)
+# 打开交互模式
+plt.ion()
+for times in range(45):
+    T = T_0 + times * Delta_T
+
+    # 温度坐标
+    Tem.append(T)
+
+    Beta = 1 / (T * K)
+    # 循环
+    for index in range(feet):
+        # 清除原有图像
+        plt.subplot(121)
+        plt.cla()
+
+        # 绘制恰当的坐标轴
+        plt.xlim(-10, axis_len)
+        plt.ylim(-5, axis_len)
+
+        # 改变自旋
+        judge(state, Beta)
+
+        # 绘图
+        for i in range(side_length):
+            for j in range(side_length):
+                if state[i][j] == -4:
+                    plt.arrow(i * 10, j * 10 + ajust, 0, state[i][j], width=wide, color='black')
+                else:
+                    plt.arrow(i * 10, j * 10, 0, state[i][j], width=wide, color='black')
+        # 暂停
+        plt.pause(0.0001)
     
-    # 暂停
+    # 能量参数
+    E_0 = energy(state)
+    E.append(0.5 * E_0 / side_length)
+
+    # 曲线拟合
+    fp2 = np.polyfit(Tem, E, 2)
+    f2 = np.poly1d(fp2)
+    fx = np.linspace(0,Tem[-1],1000)
+    plt.subplot(122)
+    # 清空图像
+    plt.cla()
+    # 设置横坐标最小值
+    plt.xlim(left=0.5)
+    plt.plot(fx,f2(fx),'g', Tem, E, "r*")
     plt.pause(0.05)
+    
+
 # 关闭交互模式
 plt.ioff()
 # 最终图形显示
