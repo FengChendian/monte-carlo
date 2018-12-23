@@ -1,6 +1,7 @@
 # _*_ coding: utf-8 _*_
 
 import random
+import time
 import math
 import numpy as np
 import matplotlib.pyplot as plt
@@ -28,6 +29,7 @@ E = []
 Tem = []
 
 # 初始化
+random.seed(time.time())
 state = np.empty((side_length, side_length))
 for i in range(side_length):
     for j in range(side_length):
@@ -35,6 +37,7 @@ for i in range(side_length):
 
 
 def judge(state, Beta):
+    random.seed(time.time())
     i = random.randint(0, side_length - 1)
     j = random.randint(0, side_length - 1)
     H_1 = calculate(state, i, j, 1)
