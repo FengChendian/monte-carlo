@@ -21,6 +21,8 @@ ajust = 4.5 * wide + 4
 # 正方形点阵边长——单位长度表示一个自旋
 side_length = 4
 
+# 自旋数量
+L = side_length * side_length
 # 坐标轴最大值(不要更改)
 axis_len = side_length * 10
 
@@ -53,18 +55,18 @@ def judge(state, Beta):
 
 
 def calculate(state, i, j, real):
-    horizon = -J * (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
-    vertical = -J * (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
-    H = horizon + vertical
+    horizon = (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
+    vertical = (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
+    H = -J * (horizon + vertical)
     return H
 
 def energy(state):
     H_0 = 0
     for i in range(side_length):
         for j in range(side_length):
-            horizon = -J * (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
-            vertical = -J * (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
-            H_0 += (horizon + vertical)
+            horizon = (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
+            vertical = (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
+            H_0 += -J * (horizon + vertical)
 
     return H_0            
 # 生成画布
@@ -103,7 +105,7 @@ for times in range(45):
     
     # 能量参数
     E_0 = energy(state)
-    E.append(0.5 * E_0 / side_length)
+    E.append(0.5 * E_0 / L)
 
     # 曲线拟合
     fp2 = np.polyfit(Tem, E, 3)
