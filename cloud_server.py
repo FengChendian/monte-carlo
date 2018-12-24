@@ -1,6 +1,7 @@
 # _*_ coding: utf-8 _*_
 
-%matplotlib inline
+# 在jupyter lab 上运行请去掉注释
+# %matplotlib inline
 
 import random
 import time
