@@ -19,13 +19,13 @@ K = 1.0
 J = 1.0
 
 # 步长
-feet = 100000
+feet = 1000
 # 箭头宽度
 wide = 0.4
 # 箭头坐标调整
 ajust = 4.5 * wide + 4
 # 正方形点阵边长——单位长度表示一个自旋
-L = 64
+L = 16
 
 # 自旋数量
 N = L * L
@@ -41,11 +41,11 @@ random.seed(time.time())
 state = np.empty((L, L))
 for i in range(L):
     for j in range(L):
-        state[i][j] = random.choice([4, -4])
+        state[i][j] = random.choice([1, -1])
 
 
 def judge(state, Beta):
-    random.seed(time.time())
+    # random.seed(time.time())
     i = random.randint(0, L - 1)
     j = random.randint(0, L - 1)
     H_1 = calculate(state, i, j, 1)
@@ -61,20 +61,20 @@ def judge(state, Beta):
 
 
 def calculate(state, i, j, real):
-    horizon = (state[(i - 1) % L][j] + state[(i + 1) % L][j])
-    vertical = (state[i][(j - 1) % L] + state[i][(j + 1) % L])
-    H = -J * (horizon + vertical)
+    horizon = (state[(i - 1)][j] + state[(i + 1) % L][j])
+    vertical = (state[i][(j - 1)] + state[i][(j + 1) % L])
+    H = -J * (horizon + vertical) * state[i][j] * real
     return H
 
 def energy(state):
     H_0 = 0
     for i in range(L):
         for j in range(L):
-            horizon = (state[(i - 1) % L][j] + state[(i + 1) % L][j])
-            vertical = (state[i][(j - 1) % L] + state[i][(j + 1) % L])
-            H_0 += -J * (horizon + vertical)
+            horizon = (state[(i - 1)][j] + state[(i + 1) % L][j])
+            vertical = (state[i][(j - 1)] + state[i][(j + 1) % L])
+            H_0 += -J * (horizon + vertical) * state[i][j]
 
-    return H_0            
+    return H_0
 # 生成画布
 plt.figure(num=1, figsize=(40, 40), dpi=100)
 
@@ -107,7 +107,7 @@ fx = np.linspace(0,Tem[-1],1000)
 plt.xlim(left=0.5, right=5)
 
 plt.xlabel('T')
-plt.ylabel('E (L = 64)')
+plt.ylabel('E')
 plt.plot(fx,f2(fx),'g', Tem, E, "r*")
-
+# plt.plot(Tem, E)
 plt.show()
