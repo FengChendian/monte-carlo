@@ -19,13 +19,13 @@ K = 1.0
 J = 1.0
 
 # 步长
-feet = 1000
+feet = 100000
 # 箭头宽度
 wide = 0.4
 # 箭头坐标调整
 ajust = 4.5 * wide + 4
 # 正方形点阵边长——单位长度表示一个自旋
-L = 16
+L = 64
 
 # 自旋数量
 N = L * L
@@ -37,7 +37,7 @@ E = []
 Tem = []
 
 # 初始化
-random.seed(time.time())
+random.seed()
 state = np.empty((L, L))
 for i in range(L):
     for j in range(L):
@@ -45,7 +45,7 @@ for i in range(L):
 
 
 def judge(state, Beta):
-    # random.seed(time.time())
+    random.seed()
     i = random.randint(0, L - 1)
     j = random.randint(0, L - 1)
     H_1 = calculate(state, i, j, 1)
