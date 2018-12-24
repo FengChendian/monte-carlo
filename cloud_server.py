@@ -25,12 +25,12 @@ wide = 0.4
 # 箭头坐标调整
 ajust = 4.5 * wide + 4
 # 正方形点阵边长——单位长度表示一个自旋
-side_length = 4
+L = 64
 
 # 自旋数量
-L = side_length * side_length
+N = L * L
 # 坐标轴最大值(不要更改)
-axis_len = side_length * 10
+axis_len = L * 10
 
 # 能量坐标
 E = []
@@ -38,16 +38,16 @@ Tem = []
 
 # 初始化
 random.seed(time.time())
-state = np.empty((side_length, side_length))
-for i in range(side_length):
-    for j in range(side_length):
+state = np.empty((L, L))
+for i in range(L):
+    for j in range(L):
         state[i][j] = random.choice([4, -4])
 
 
 def judge(state, Beta):
     random.seed(time.time())
-    i = random.randint(0, side_length - 1)
-    j = random.randint(0, side_length - 1)
+    i = random.randint(0, L - 1)
+    j = random.randint(0, L - 1)
     H_1 = calculate(state, i, j, 1)
     H_2 = calculate(state, i, j, -1)
     if H_2 - H_1 < 0:
@@ -61,17 +61,17 @@ def judge(state, Beta):
 
 
 def calculate(state, i, j, real):
-    horizon = (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
-    vertical = (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
+    horizon = (state[(i - 1) % L][j] + state[(i + 1) % L][j])
+    vertical = (state[i][(j - 1) % L] + state[i][(j + 1) % L])
     H = -J * (horizon + vertical)
     return H
 
 def energy(state):
     H_0 = 0
-    for i in range(side_length):
-        for j in range(side_length):
-            horizon = (state[(i - 1) % side_length][j] + state[(i + 1) % side_length][j])
-            vertical = (state[i][(j - 1) % side_length] + state[i][(j + 1) % side_length])
+    for i in range(L):
+        for j in range(L):
+            horizon = (state[(i - 1) % L][j] + state[(i + 1) % L][j])
+            vertical = (state[i][(j - 1) % L] + state[i][(j + 1) % L])
             H_0 += -J * (horizon + vertical)
 
     return H_0            
@@ -100,8 +100,8 @@ for times in range(45):
         judge(state, Beta)
 
 #         # 绘图
-#         for i in range(side_length):
-#             for j in range(side_length):
+#         for i in range(L):
+#             for j in range(L):
 #                 if state[i][j] == -4:
 #                     plt.arrow(i * 10, j * 10 + ajust, 0, state[i][j], width=wide, color='black')
 #                 else:
@@ -111,7 +111,7 @@ for times in range(45):
     
     # 能量参数
     E_0 = energy(state)
-    E.append(0.5 * E_0 / L)
+    E.append(0.5 * E_0 / N)
 
     
 
@@ -123,7 +123,7 @@ for times in range(45):
 fp2 = np.polyfit(Tem, E, 3)
 f2 = np.poly1d(fp2)
 fx = np.linspace(0,Tem[-1],1000)
-plt.subplot(122)
+# plt.subplot(122)
 # 设置横坐标最小值
 plt.xlim(left=0.5, right=5)
 
