@@ -19,7 +19,7 @@ K = 1.0
 J = 1.0
 
 # 步长
-feet = 1000
+feet = 100000
 # 箭头宽度
 wide = 0.4
 # 箭头坐标调整
@@ -76,9 +76,8 @@ def energy(state):
 
     return H_0            
 # 生成画布
-plt.figure(num=1, figsize=(20, 40), dpi=100)
-# 打开交互模式
-# plt.ion()
+plt.figure(num=1, figsize=(40, 40), dpi=100)
+
 for times in range(45):
     T = T_0 + times * Delta_T
 
@@ -88,48 +87,27 @@ for times in range(45):
     Beta = 1 / (T * K)
     # 循环
     for index in range(feet):
-#         # 清除原有图像
-#         plt.subplot(121)
-#         plt.cla()
-
-#         # 绘制恰当的坐标轴
-#         plt.xlim(-10, axis_len)
-#         plt.ylim(-5, axis_len)
 
         # 改变自旋
         judge(state, Beta)
-
-#         # 绘图
-#         for i in range(L):
-#             for j in range(L):
-#                 if state[i][j] == -4:
-#                     plt.arrow(i * 10, j * 10 + ajust, 0, state[i][j], width=wide, color='black')
-#                 else:
-#                     plt.arrow(i * 10, j * 10, 0, state[i][j], width=wide, color='black')
-#         # 暂停
-#         plt.pause(0.0001)
     
     # 能量参数
     E_0 = energy(state)
     E.append(0.5 * E_0 / N)
 
     
-
-# # 关闭交互模式
-# plt.ioff()
 # 最终图形显示
 
 # 曲线拟合
 fp2 = np.polyfit(Tem, E, 3)
 f2 = np.poly1d(fp2)
 fx = np.linspace(0,Tem[-1],1000)
-# plt.subplot(122)
+
 # 设置横坐标最小值
 plt.xlim(left=0.5, right=5)
 
 plt.xlabel('T')
-plt.ylabel('E')
+plt.ylabel('E (L = 64)')
 plt.plot(fx,f2(fx),'g', Tem, E, "r*")
-plt.pause(0.05)
 
 plt.show()
