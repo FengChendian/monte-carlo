@@ -99,15 +99,15 @@ for times in range(45):
 # 最终图形显示
 
 # 曲线拟合
-fp2 = np.polyfit(Tem, E, 3)
-f2 = np.poly1d(fp2)
-fx = np.linspace(0,Tem[-1],1000)
+# fp2 = np.polyfit(Tem, E, 3)
+# f2 = np.poly1d(fp2)
+# fx = np.linspace(0,Tem[-1],1000)
 
 # 设置横坐标最小值
 plt.xlim(left=0.5, right=5)
 
 plt.xlabel('T')
 plt.ylabel('E')
-plt.plot(fx,f2(fx),'g', Tem, E, "r*")
-# plt.plot(Tem, E)
+# plt.plot(fx,f2(fx),'g', Tem, E, "r*")
+plt.plot(Tem, E)
 plt.show()
