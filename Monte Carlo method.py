@@ -116,6 +116,10 @@ for times in range(45):
     plt.cla()
     # 设置横坐标最小值
     plt.xlim(left=0.5)
+    # 坐标轴名称
+    plt.xlabel('T')
+    plt.ylabel('E')
+    
     plt.plot(fx,f2(fx),'g', Tem, E, "r*")
     plt.pause(0.05)
     
